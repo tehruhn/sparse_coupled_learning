@@ -16,7 +16,6 @@ def create_connected_random_graph(N, additional_edge_probability):
                 edge = (i, j)
                 if edge not in edges:
                     edges.add(edge)
-    
     return list(edges)
 
 def construct_flow_laplacian(N, edges, conductances):
