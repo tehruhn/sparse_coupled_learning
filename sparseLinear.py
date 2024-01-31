@@ -51,7 +51,7 @@ def create_square_grid_graph(a, b, periodic=False):
     return NN, NE, EI, EJ
 
 
-def SparseIncidenceConstraintMatrix(SourceNodes, SourceEdges, TargetNodes, TargetEdges, GroundNodes, NN, EI, EJ):
+def create_sparse_incidence_constraint_matrix(SourceNodes, SourceEdges, TargetNodes, TargetEdges, GroundNodes, NN, EI, EJ):
     """
     Construct sparse incidence and constraint matrices for a graph.
 
@@ -146,7 +146,7 @@ def initialize_task_types(nTaskTypes, nTasksPerType, sources, targets, sourceedg
         edge_list = choice(range(NE), size=sourceedges+targetedges, replace=False)
 
         # Create sparse incidence and constraint matrices
-        matrices = SparseIncidenceConstraintMatrix(node_list[:sources], 
+        matrices = create_sparse_incidence_constraint_matrix(node_list[:sources], 
                                                    edge_list[:sourceedges], 
                                                    node_list[sources:], 
                                                    edge_list[sourceedges:], 
