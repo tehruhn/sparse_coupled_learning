@@ -1,8 +1,5 @@
 from sparseLinear import *
 
-# print(create_square_grid_graph(3,3,True))
-
-# Example usage
 a, b = 100, 100  # Grid dimensions
 periodic = False  # Periodic grid
 trials = 1  # Number of trials
