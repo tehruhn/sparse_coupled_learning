@@ -1,6 +1,6 @@
 from sparseLinear import *
 
-a, b = 100, 100  # Grid dimensions
+a, b = 15, 15 # Grid dimensions
 periodic = False  # Periodic grid
 trials = 1  # Number of trials
 nTaskTypes = 2  # Number of task types
@@ -10,8 +10,8 @@ lr = 3.0  # Learning rate
 Steps = 40001  # Number of learning steps
 sources = 5  # Number of source nodes
 targets = 3  # Number of target nodes
-sourceedges = 1  # Number of source edges
-targetedges = 1  # Number of target edges
+sourceedges = 2  # Number of source edges
+targetedges = 2  # Number of target edges
 
 np.random.seed(42)
 

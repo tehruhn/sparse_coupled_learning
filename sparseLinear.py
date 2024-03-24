@@ -73,6 +73,7 @@ def create_sparse_incidence_constraint_matrix(SourceNodes, SourceEdges, TargetNo
            - sBLC (csc_matrix): Constraint border Laplacian matrix for the clamped state.
            - sDot (csc_matrix): Matrix for cost computation.
     """
+    print(type(EI), EJ)
     NE = len(EI)
     dF, xF, yF, dC, xC, yC = [], [], [], [], [], []
     nc = NN
