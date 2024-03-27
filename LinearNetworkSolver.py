@@ -7,6 +7,7 @@ from scipy.sparse.linalg import spsolve, splu, minres
 from numpy.linalg import norm
 from typing import Optional, List, Tuple
 import matplotlib.pyplot as plt
+import networkx
 
 from task_utils import *
 
@@ -536,7 +537,6 @@ if __name__ == "__main__":
     # make the linear network
     linNet = LinearNetwork("./Net1.pkl")
     g = linNet.to_networkx_graph()
-    print(g)
     solver = LinearNetworkSolver(linNet)
     
     # add source, target, ground nodes
