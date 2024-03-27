@@ -350,6 +350,8 @@ class LinearNetworkSolver:
 if __name__ == "__main__":
 
     linNet = LinearNetwork("./Net1.pkl")
+    g = linNet.to_networkx_graph()
+    print(g)
     solver = LinearNetworkSolver(linNet)
     
     source_nodes = np.array([3, 8], dtype=int)
