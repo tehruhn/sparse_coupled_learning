@@ -73,7 +73,7 @@ def create_sparse_incidence_constraint_matrix(SourceNodes, SourceEdges, TargetNo
            - sBLC (csc_matrix): Constraint border Laplacian matrix for the clamped state.
            - sDot (csc_matrix): Matrix for cost computation.
     """
-    print(type(EI), EJ)
+    # print(type(EI), EJ)
     NE = len(EI)
     dF, xF, yF, dC, xC, yC = [], [], [], [], [], []
     nc = NN
@@ -93,6 +93,7 @@ def create_sparse_incidence_constraint_matrix(SourceNodes, SourceEdges, TargetNo
                 yC.extend([nc2, node])
                 nc += 1 if include_in_f else 0
                 nc2 += 1
+                print(nc, nc2)
         else:
             for edge in groupname:
                 d_vals = [1., 1., -1., -1.]
@@ -109,6 +110,7 @@ def create_sparse_incidence_constraint_matrix(SourceNodes, SourceEdges, TargetNo
                 yC.extend(y2_vals)
                 nc += 1 if include_in_f else 0
                 nc2 += 1
+                print(nc, nc2)
 
     # Construct matrices
     sDMF = csc_matrix((np.r_[np.ones(NE),-np.ones(NE)], (np.r_[np.arange(NE),np.arange(NE)], np.r_[EI,EJ])), shape=(NE, nc))
@@ -179,6 +181,7 @@ def create_constraints(nTasksPerType, fshape, cshape, sources, targets, sourceed
     Returns:
     tuple: A tuple containing constraints for free state, clamped state, and desired outcomes.
     """
+    print(fshape, cshape)
     ff = np.zeros([nTasksPerType, fshape])
     fc = np.zeros([nTasksPerType, cshape])
     desired = np.zeros([nTasksPerType, cshape-fshape])
@@ -189,8 +192,8 @@ def create_constraints(nTasksPerType, fshape, cshape, sources, targets, sourceed
         out_node_data = randn(targets) * 0.3
         edge_data = randn(sourceedges)
         out_edge_data = randn(targetedges) * 0.3
-
         # Set constraints for free and clamped states
+        print(ff[i, NN:].shape, np.r_[0., node_data, edge_data])
         ff[i, NN:] = np.r_[0., node_data, edge_data] 
         fc[i, NN:] = np.r_[0., node_data, edge_data, out_node_data, out_edge_data]
         desired[i] = np.r_[out_node_data, out_edge_data]

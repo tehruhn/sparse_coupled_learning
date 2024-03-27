@@ -18,8 +18,19 @@ def generate_regression_data():
 
     return (train_inputs, train_targets, test_inputs, test_targets)
 
-def encode_regression_data_in_correct_format(NN, NE, EI, EJ):
+def encode_regression_data_in_correct_format(split="train"):
     """
     Can be encoded as purely a node constraint
+    Returns (node input data, node output data)
     """
-    pass
+    inputs, outputs = None, None
+    train_inputs, train_targets, test_inputs, test_targets = generate_regression_data()
+    if split == "train":
+        inputs, outputs = train_inputs, train_targets
+    else:
+        inputs, outputs = test_inputs, test_targets
+    return (train_inputs, train_targets) 
+    
+
+if __name__ == "__main__":
+    tri, trt, tei, tet = generate_regression_data()

@@ -37,6 +37,8 @@ class LinearNetworkSolver:
         self.sBLC = None 
         self.sDot = None
 
+        self.ntasks = 0
+
     @property
     def source_nodes(self) -> np.ndarray:
         """Gets the source nodes."""
@@ -87,7 +89,7 @@ class LinearNetworkSolver:
         """Sets the ground nodes."""
         self._ground_nodes = value
 
-    def create_sparse_incidence_constraint_matrices(self):
+    def _create_sparse_incidence_constraint_matrices(self):
         """
         Constructs and assigns sparse incidence and constraint matrices for the linear network
         to class attributes. This method processes the network's nodes and edges to generate matrices
@@ -172,24 +174,193 @@ class LinearNetworkSolver:
         self.sBLC =sBLC 
         self.sDot = sDot
 
-    # def create_constraints_for_problem()
+
+    def _create_constraints(self, in_node_data=[], out_node_data=[], in_edge_data=[], out_edge_data=[]):
+        """
+        Add constraints to the data
+        """
+        self.ntasks, fshape, cshape = in_node_data.shape[0], self.sDMF.shape[1], self.sDMC.shape[1]
+        ff = np.zeros([self.ntasks, fshape])
+        fc = np.zeros([self.ntasks, cshape])
+        desired = np.zeros([self.ntasks, cshape-fshape])
+
+        for i in range(self.ntasks):
+            # Data for node and edge constraints
+            i_n_data = in_node_data[i] if len(in_node_data) > 0 else np.zeros(0)
+            o_n_data = out_node_data[i] if len(out_node_data) > 0 else np.zeros(0)
+            i_e_data = in_edge_data[i] if len(in_edge_data) > 0 else np.zeros(0)
+            o_e_data = out_edge_data[i] if len(out_edge_data) > 0 else np.zeros(0)
+
+            # Set constraints for free and clamped states
+            ff[i, self._network.NN:] = np.r_[0., i_n_data, i_e_data] 
+            fc[i, self._network.NN:] = np.r_[0., i_n_data, i_e_data, o_n_data, o_e_data]
+            desired[i] = np.r_[o_n_data, o_e_data]
+
+        self.ff, self.fc, self.desired = ff, fc, desired
+
+    
+    def set_up_training_task(self, source_nodes=[], target_nodes=[], source_edges=[], target_edges=[], 
+                             ground_nodes=[], in_node=[], out_node=[], in_edge=[], out_edge=[]):
+        if self._network == None:
+            print("Initialize network first")
+            return
+        self._source_nodes = source_nodes
+        self._target_nodes = target_nodes
+        self._source_edges = source_edges
+        self._target_edges = target_edges
+        self._ground_nodes = ground_nodes
+
+        # set up constraint matrix
+        self._create_sparse_incidence_constraint_matrices()
+
+        # include training data
+        self._create_constraints(in_node_data=in_node, out_node_data=out_node, in_edge_data=in_edge, out_edge_data=out_edge)
+
+    def cost_computation(self, sK):
+        # Compute inverse matrix and solve for the free state
+        AFinv = splu(self.sBLF + self.sDMF.T * sK * self.sDMF)
+        PF = AFinv.solve(self.ff.T)
+
+        # Calculate the sum value for the cost
+        sumval = np.sum((self.sDot.dot(PF) - self.desired.T)**2)
+
+        # Compute inverse matrix and solve for the clamped state
+        ACinv = splu(self.sBLC + self.sDMC.T * sK * self.sDMC)
+        PC = ACinv.solve(self.fc.T)
+
+        return PF, PC, sumval
+    
+    def state_solve(self, sK, tn, x0, threshold, state_type="f"):
+        PF = PC = None
+        if threshold > 1.e-50:
+            # Direct solving approach
+            if state_type == "f":
+                AFinv = splu(self.sBLF + self.sDMF.T * sK * self.sDMF)
+                PF = AFinv.solve(self.ff[tn])
+            elif state_type == "c":
+                ACinv = splu(self.sBLC + self.sDMC.T * sK * self.sDMC)
+                PC = ACinv.solve(self.fc[tn])
+        else:
+            # Iterative solving approach
+            if state_type == "f":
+                PF = minres(self.sBLF + self.sDMF.T * sK * self.sDMF, self.ff[tn], tol=1.e-10, x0=x0)[0]
+            elif state_type == "c":
+                PC = minres(self.sBLC + self.sDMC.T * sK * self.sDMC, self.fc[tn], tol=1.e-10, x0=x0)[0]
+
+        return PF, PC
+
+    def update_conductances(self, K, lr, eta, PF, PC):
+        DPF = self.sDMF * PF
+        PPF = DPF**2
+        DPC = self.sDMC * PC
+        PPC = DPC**2
+        DKL = 0.5 * (PPC - PPF) / eta
+        K2 = K - lr * DKL
+        K2 = K2.clip(1.e-6, 1.e4)
+        return K2, K2-K
+    
+    def compute_cost_for_task(self, sK):
+        fshape, cshape = self.sDMF.shape[1], self.sDMC.shape[1]
+        ntasks = self.ntasks
+        CEq0 = 0.
+        PFs = np.zeros([1, fshape, ntasks])
+        PCs = np.zeros([1, cshape, ntasks])
+        # Compute cost and states for each task type
+        PF, PC, sumval = self.cost_computation(sK)
+        # Store the computed states
+        PFs[0] = PF
+        PCs[0] = PC
+        # Accumulate the total cost
+        CEq0 += sumval
+        # Average the total cost over all task types and tasks per type
+        CEq0 /= ntasks
+        return PFs, PCs, CEq0
+    
+    def perform_trials(self, source_nodes=[], target_nodes=[], 
+                       source_edges=[], target_edges=[], 
+                       ground_nodes=[], in_node=[], 
+                       out_node=[], in_edge=[], out_edge=[],
+                       eta=1.e-3, 
+                       lr=3.0, 
+                       steps=40001):
+        if self._network == None:
+            print("Initialize network first")
+            return
+        CompSteps = np.unique(np.around(np.r_[0, np.logspace(0, np.log10(steps-1), 430)])).astype(int)
+
+        # Run the trial
+        self.set_up_training_task(source_nodes=source_nodes,
+                                  target_nodes=target_nodes,
+                                  source_edges=source_edges,
+                                  target_edges=target_edges,
+                                  ground_nodes=ground_nodes,
+                                  in_node=in_node,
+                                  out_node=out_node,
+                                  in_edge=in_edge,
+                                  out_edge=out_edge)
+        K = np.ones(self._network.NE)
+        sK = spdiags(K, 0,self._network. NE, self._network.NE, format='csc')
+        PFs, PCs, CEq0 = self.compute_cost_for_task(sK)
+
+        CEq = CEq0
+        print(f"Step 0, Initial Cost {CEq0:.4f}")
+
+        # Iterate over training steps
+        for steps in range(1, steps + 1):
+            # Choose a specific task
+            tt = 0
+            tn = randint(0, self.ntasks)
+
+            # Solve for free and clamped states
+            # Free state
+            PF, _ = self.state_solve(sK, tn,
+                                PFs[tt,:,tn], 
+                                CEq/CEq0, 
+                                state_type="f")
+            
+            # Clamped state
+            FST = self.sDot.dot(PF)
+            Nudge = FST + eta * (self.desired[tn] - FST)
+            self.fc[tn,self.sDMF.shape[1]:] = Nudge
+            _, PC = self.state_solve(sK, tn, 
+                                PCs[tt,:,tn],
+                                CEq/CEq0, 
+                                state_type="c")
+
+            PFs[tt,:,tn], PCs[tt,:,tn] = PF, PC
+
+            # Update conductances
+            K, DK = self.update_conductances(K, lr, eta, PF, PC)
+            sK = spdiags(K, 0, self._network.NE, self._network.NE, format='csc')
+
+            # Print cost and norm of conductance change every 100 steps
+            if steps % 100 == 0:
+                _, _, CEq = self.compute_cost_for_task(sK)
+                print(f"Step {steps}, Relative Cost {CEq/CEq0:.8f}, Norm of Conductance Change {norm(DK):.8f}")
+
+            # Record costs at specific computation steps
+            if steps in CompSteps:
+                _, _, CEq = self.compute_cost_for_task(sK)
+
+        return K
+
 
 
 
 if __name__ == "__main__":
 
     linNet = LinearNetwork("./Net1.pkl")
-    g = linNet.to_networkx_graph()
-    print(g)
     solver = LinearNetworkSolver(linNet)
     
-    solver.source_nodes = np.array([3, 8], dtype=int)
-    solver.target_nodes = np.array([4, 5], dtype=int)
-    solver.ground_nodes = np.array([2], dtype=int)
+    source_nodes = np.array([3, 8], dtype=int)
+    target_nodes = np.array([4, 5], dtype=int)
+    ground_nodes = np.array([2], dtype=int)
 
-    # print(solver.ground_nodes)
-    solver.create_sparse_incidence_constraint_matrices()
-    # print(solver.sDMC)
-    tri, tro, ti, to = generate_regression_data()
-    print(tri)        
+    tri, trt = encode_regression_data_in_correct_format()
+    solver.perform_trials(source_nodes=source_nodes, 
+                                    target_nodes=target_nodes,
+                                    ground_nodes=ground_nodes,
+                                    in_node=tri,
+                                    out_node=trt)
+    
 
