@@ -276,7 +276,7 @@ class LinearNetworkSolver:
         CEq0 /= ntasks
         return PFs, PCs, CEq0
     
-    def perform_trials(self, source_nodes=[], target_nodes=[], 
+    def perform_trial(self, source_nodes=[], target_nodes=[], 
                        source_edges=[], target_edges=[], 
                        ground_nodes=[], in_node=[], 
                        out_node=[], in_edge=[], out_edge=[],
@@ -357,7 +357,7 @@ if __name__ == "__main__":
     ground_nodes = np.array([2], dtype=int)
 
     tri, trt = encode_regression_data_in_correct_format()
-    solver.perform_trials(source_nodes=source_nodes, 
+    solver.perform_trial(source_nodes=source_nodes, 
                                     target_nodes=target_nodes,
                                     ground_nodes=ground_nodes,
                                     in_node=tri,
