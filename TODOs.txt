@@ -1,0 +1,35 @@
+1. How can I validate this output? Also, would you have any other sample problems I can run? This is primarily so that I can include some pretty pictures and examples of problems this framework can solve in my Thesis. I am also open to suggestions about interesting problems I can demonstrate this on.
+
+- train on classification problems
+- apply nonlin at the end 
+
+2. Could you elaborate a bit more on what you mentioned last time regarding "interesting problems to study using large linear networks"?
+
+- makes more sense to study what large systems do wrt smaller ones
+- train time dir prop to delta bw free and clamped distance (source and target)
+- many questions wrt system size
+- no square lattices (DONE)
+- inc dist bw source and target (DONE)
+- something simple but can use scalability of this code
+- "width" - add a hidden layer in the middle thats wide - more alternatives from source to nodes
+- for chips we dont know sources and targets connectivity
+- any intuition is useful
+- current vague intution - compared to just barebones, learning will be easier, will improve in some sense as gets wider, diminshing returns
+- not only track error, but also how much power the solution takes
+- which architectures look interesting
+- do not increase in general path lengths between sources and targets (all length 2 for example)
+- DP = dot(sDMF, PF), K*DP^2 (is power)
+- see how architecture affects power (without biases)
+
+3. I am planning to clean up the Linear Solver class as well. Would you have any suggestions as to what I should add to it?
+
+- add a layer to make it more useful for classification problems (INTERESTING) - can do in multiple ways
+- need to see a great way to discretize
+- if correct classification do nothing, if wrong, apply learning rule - IDENTICAL TO CROSS ENTROPY
+
+4. I have started writing the introduction to my Thesis. I will keep you posted on how I progress with that.
+
+- make sure to include systems stuff
+- make sure to have physics details also
+
+

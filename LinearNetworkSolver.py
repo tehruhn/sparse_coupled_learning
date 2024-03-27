@@ -359,10 +359,12 @@ if __name__ == "__main__":
     ground_nodes = np.array([2], dtype=int)
 
     tri, trt = encode_regression_data_in_correct_format()
-    solver.perform_trial(source_nodes=source_nodes, 
+    K = solver.perform_trial(source_nodes=source_nodes, 
                                     target_nodes=target_nodes,
                                     ground_nodes=ground_nodes,
                                     in_node=tri,
-                                    out_node=trt)
+                                    out_node=trt,
+                                    steps=1000)
+    print(K)
     
 
