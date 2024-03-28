@@ -15,6 +15,13 @@ def create_network(source, hidden, target, num_hidden=1):
         source_nodes.append(current_index)
         current_index += 1
     G.add_nodes_from(source_nodes)
+
+    # Create target nodes
+    target_nodes = []
+    for _ in range(target):
+        target_nodes.append(current_index)
+        current_index += 1
+    G.add_nodes_from(target_nodes)
     
     # Create hidden layers
     hidden_layers = []
@@ -45,13 +52,6 @@ def create_network(source, hidden, target, num_hidden=1):
                 G.add_edge(source_node, target_node)
                 G.add_edge(target_node, source_node)  # Add reverse connection
     
-    # Create target nodes
-    target_nodes = []
-    for _ in range(target):
-        target_nodes.append(current_index)
-        current_index += 1
-    G.add_nodes_from(target_nodes)
-    
     # Connect nodes to target nodes depending on the presence of hidden layers
     for node in hidden_layers[-1] if num_hidden > 0 else source_nodes:
         for target_node in target_nodes:
@@ -75,7 +75,7 @@ def generate_regression_data(n_inputs, n_outputs, n_samples=420, train_split=0.9
     input_pairs = np.random.uniform(1, 5, (n_samples, n_inputs))
     
     # Randomly generate coefficients for a simple linear model
-    coefficients = np.random.uniform(0.1, 0.3, (n_inputs, n_outputs))
+    coefficients = np.random.uniform(0, 1, (n_inputs, n_outputs))
     
     # Calculate targets based on the generated coefficients
     targets = np.dot(input_pairs, coefficients)
@@ -95,10 +95,10 @@ def generate_regression_data(n_inputs, n_outputs, n_samples=420, train_split=0.9
 
 
 if __name__ == "__main__":
-    source = 5
+    source = 3
     hidden = 10
-    target = 5
-    num_hidden = 2
+    target = 2
+    num_hidden = 1
     G, source_nodes, hidden_layers, target_nodes = create_network(source, hidden, target, num_hidden)
     print("Source Nodes:", source_nodes)
     print("Hidden Layers:", hidden_layers)
