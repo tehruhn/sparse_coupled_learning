@@ -450,6 +450,10 @@ class LinearNetworkSolver:
         except Exception as e:
             raise Exception(f"Failed to compute cost for task due to: {e}")
 
+    def compute_power(self, K, PF):
+        DP = np.dot(PF, self.sDMF)
+        power = K * np.square(DP)
+        return power
     
     def perform_trial(
         self, 
@@ -464,7 +468,9 @@ class LinearNetworkSolver:
         out_edge: Optional[np.ndarray] = None,
         eta: float = 1.e-3, 
         lr: float = 3.0, 
-        steps: int = 40001
+        steps: int = 40001,
+        every_nth: int = 100,
+        debug = False
     ) -> np.ndarray:
         """
         Executes a single trial of the optimization process, adjusting the network's conductances
@@ -506,7 +512,10 @@ class LinearNetworkSolver:
         PFs, PCs, CEq0 = self.compute_cost_for_task(sK)
 
         CEq = CEq0
-        print(f"Step 0, Initial Cost {CEq0:.4f}")
+        if debug :
+            print(f"Step 0, Initial Cost {CEq0:.4f}")
+
+        all_costs = [(0, CEq0)]
 
         for step in range(1, steps + 1):
             tn = randint(0, self.ntasks)
@@ -524,11 +533,13 @@ class LinearNetworkSolver:
             K, DK = self.update_conductances(K, lr, eta, PF, PC)
             sK = spdiags(K, 0, self._network.NE, self._network.NE, format='csc')
 
-            if step % 100 == 0:
+            if step % every_nth == 0:
                 _, _, CEq = self.compute_cost_for_task(sK)
-                print(f"Step {step}, Relative Cost {CEq / CEq0:.8f}, Norm of Conductance Change {norm(DK):.8f}")
+                if debug :
+                    print(f"Step {step}, Relative Cost {CEq / CEq0:.8f}, Norm of Conductance Change {norm(DK):.8f}")
+                all_costs.append((step, CEq))
 
-        return K
+        return K, all_costs
 
 
 
@@ -548,7 +559,7 @@ if __name__ == "__main__":
     tri, trt = encode_regression_data_in_correct_format()
 
     # pass data to the network and train it
-    K = solver.perform_trial(source_nodes=source_nodes, 
+    K, costs = solver.perform_trial(source_nodes=source_nodes, 
                             target_nodes=target_nodes,
                             ground_nodes=ground_nodes,
                             in_node=tri,
@@ -556,6 +567,6 @@ if __name__ == "__main__":
                             lr=1.e-3,
                             steps=1000
                             )
-    print(K)
+    print(costs)
     
 
