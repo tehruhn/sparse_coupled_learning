@@ -1,7 +1,7 @@
 import json
 import matplotlib.pyplot as plt
 
-with open('results_lr2.json', 'r') as f:
+with open('all_sizes.json', 'r') as f:
     all_costs = json.load(f)
 
 plt.figure(figsize=(12, 8))

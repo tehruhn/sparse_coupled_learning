@@ -15,7 +15,7 @@ tri, trt, tei, tet = generate_regression_data(2, 2)
 
 def save_costs(all_costs):
     # Helper function to save costs to a file
-    with open('results_lr2.json', 'w') as f:
+    with open('all_sizes.json', 'w') as f:
         json.dump(all_costs, f)
 
 # # For zero hidden nodes
