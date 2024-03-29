@@ -6,7 +6,8 @@ from LinearNetworkSolver import LinearNetworkSolver
 
 np.random.seed(42)
 
-hidden_nodes_range_list = list(range(100, 10001, 100))
+# hidden_nodes_range_list = list(range(100, 10001, 100))
+hidden_nodes_range_list = list(range(2, 100, 2))
 
 all_costs = {}
 

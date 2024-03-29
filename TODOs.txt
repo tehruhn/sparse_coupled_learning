@@ -33,3 +33,30 @@
 - make sure to have physics details also
 
 
+Mar 29, 2024
+
+- find tasks that get zero training error (TODO)
+- power (TODO)
+- classification
+- need to figure out what the label is from output
+- take all training data, pass through untrained networks 
+- now take all average for all training data associated with class 1
+- that average is now the desired started
+- sometimes reassiging labels helps
+- just get free state values at that node
+- we dont want to do mean sq error like usual
+- binary cross entropy
+- check which label the output is closest to
+- if correct classification do nothing, if wrong, apply learning rule
+- this is the same as minimizing cross entropy ( see PROOF )
+
+PSEUDOCODE
+
+- get entries from first n entries of PF
+- do this kmeans style procedure to get centroids for targets
+- classification accuracy begins high but still improves
+- use IRIS dataset (more or less linearly separable)
+
+- package name (something)
+- documentation etc (TODO)
+- rerun width

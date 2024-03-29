@@ -451,7 +451,9 @@ class LinearNetworkSolver:
             raise Exception(f"Failed to compute cost for task due to: {e}")
 
     def compute_power(self, K, PF):
-        DP = np.dot(PF, self.sDMF)
+        DP = np.dot(self.sDMF, PF)
+        print("Here")
+        print(self.sDMF.shape, PF.shape, DP.shape)
         power = K * np.square(DP)
         return power
     
@@ -536,7 +538,7 @@ class LinearNetworkSolver:
             if step % every_nth == 0:
                 _, _, CEq = self.compute_cost_for_task(sK)
                 if debug :
-                    print(f"Step {step}, Relative Cost {CEq / CEq0:.8f}, Norm of Conductance Change {norm(DK):.8f}")
+                    print(f"Step {step}, Relative Cost {CEq / CEq0:.8f}, Norm of Conductance Change {norm(DK):.8f}, Power {self.compute_power(K, PF)}")
                 all_costs.append((step, CEq))
 
         return K, all_costs
@@ -548,6 +550,7 @@ if __name__ == "__main__":
     # make the linear network
     linNet = LinearNetwork("./Net1.pkl")
     g = linNet.to_networkx_graph()
+    print(g)
     solver = LinearNetworkSolver(linNet)
     
     # add source, target, ground nodes
@@ -565,7 +568,8 @@ if __name__ == "__main__":
                             in_node=tri,
                             out_node=trt,
                             lr=1.e-3,
-                            steps=1000
+                            steps=1000,
+                            debug=True
                             )
     print(costs)
     
