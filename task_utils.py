@@ -3,7 +3,7 @@ np.random.seed(0)
 
 def generate_regression_data():
 
-    input_pairs = np.random.uniform(1, 5, (420, 2))
+    input_pairs = np.random.uniform(0, 1, (420, 2))
 
     VD1 = 0.15 * input_pairs[:, 0] + 0.20 * input_pairs[:, 1]
     VD2 = 0.25 * input_pairs[:, 0] + 0.10 * input_pairs[:, 1]

@@ -7,7 +7,8 @@ from LinearNetworkSolver import LinearNetworkSolver
 np.random.seed(42)
 
 # hidden_nodes_range_list = list(range(100, 10001, 100))
-hidden_nodes_range_list = list(range(2, 100, 2))
+# hidden_nodes_range_list = list(range(2, 100, 2))
+hidden_nodes_range_list = [10]
 
 all_costs = {}
 
@@ -37,7 +38,7 @@ def save_costs(all_costs):
 # all_costs[0] = costs
 
 # Save after every completion of perform_trial for zero hidden nodes
-save_costs(all_costs)
+# save_costs(all_costs)
 
 # For others
 for hidden_nodes in hidden_nodes_range_list:
@@ -52,12 +53,12 @@ for hidden_nodes in hidden_nodes_range_list:
                                     ground_nodes=[S[0]],
                                     in_node=tri,
                                     out_node=trt,
-                                    lr=1.e-2,
+                                    lr=1.e-3,
                                     steps=10000,
                                     debug=True,
                                     every_nth=1000
                                     )
-    all_costs[hidden_nodes] = costs
+    # all_costs[hidden_nodes] = costs
 
-    # Save after every completion of perform_trial for each hidden_nodes configuration
-    save_costs(all_costs)
+    # # Save after every completion of perform_trial for each hidden_nodes configuration
+    # save_costs(all_costs)

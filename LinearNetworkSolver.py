@@ -450,11 +450,12 @@ class LinearNetworkSolver:
         except Exception as e:
             raise Exception(f"Failed to compute cost for task due to: {e}")
 
-    def compute_power(self, K, PF):
-        DP = np.dot(self.sDMF, PF)
-        print("Here")
-        print(self.sDMF.shape, PF.shape, DP.shape)
-        power = K * np.square(DP)
+    def compute_power(self, K, PF) -> float:
+        """
+        Computes Power for the system
+        """
+        DP = self.sDMF@PF
+        power = np.dot(K, np.square(DP))
         return power
     
     def perform_trial(
