@@ -72,12 +72,12 @@ def create_network(source, hidden, target, num_hidden=1):
     
     return G, source_nodes, hidden_layers, target_nodes
 
-def generate_regression_data(n_inputs, n_outputs, n_samples=420, train_split=0.95):
+def generate_random_regression_data(n_inputs, n_outputs, n_samples=420, train_split=0.95):
     # generate random input pairs
-    input_pairs = np.random.uniform(1, 5, (n_samples, n_inputs))
+    input_pairs = np.random.uniform(0, 1, (n_samples, n_inputs))
     
     # randomly generate coefficients for a simple linear model
-    coefficients = np.random.uniform(0, 1, (n_inputs, n_outputs))
+    coefficients = np.random.uniform(0, 0.5, (n_inputs, n_outputs))
     
     # calculate targets based on the generated coefficients
     targets = np.dot(input_pairs, coefficients)

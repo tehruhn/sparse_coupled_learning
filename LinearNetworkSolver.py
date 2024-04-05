@@ -473,6 +473,7 @@ class LinearNetworkSolver:
         lr: float = 3.0, 
         steps: int = 40001,
         every_nth: int = 100,
+        init_strategy = "random",
         debug = False
     ) -> np.ndarray:
         """
@@ -508,8 +509,10 @@ class LinearNetworkSolver:
             in_edge=in_edge,
             out_edge=out_edge
         )
-
-        K = np.ones(self._network.NE)
+        if init_strategy == "random":
+            K = np.random.uniform(0.5, 1.5, self._network.NE)
+        else:
+            K = np.ones(self._network.NE)
         sK = spdiags(K, 0, self._network.NE, self._network.NE, format='csc')
 
         PFs, PCs, CEq0 = self.compute_cost_for_task(sK)

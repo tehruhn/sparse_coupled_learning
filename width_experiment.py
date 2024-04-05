@@ -1,6 +1,6 @@
 import json
 import numpy as np
-from experiment_utils import create_network
+from experiment_utils import create_network, generate_random_regression_data
 from task_utils import generate_regression_data
 from LinearNetwork import LinearNetwork
 from LinearNetworkSolver import LinearNetworkSolver
@@ -11,12 +11,12 @@ np.random.seed(42)
 
 # hidden_nodes_range_list = list(range(100, 10001, 100))
 # hidden_nodes_range_list = list(range(2, 100, 2))
-hidden_nodes_range_list = [60]
-
+hidden_nodes_range_list = [10]
 all_costs = {}
 
 # Initialize data generation
-tri, trt, tei, tet = generate_regression_data()
+# tri, trt, tei, tet = generate_regression_data()
+tri, trt, tei, tet = generate_random_regression_data(2, 2)
 
 def save_costs(all_costs):
     # Helper function to save costs to a file
@@ -66,16 +66,16 @@ for hidden_nodes in hidden_nodes_range_list:
                                     in_node=tri,
                                     out_node=trt,
                                     lr=0.05,
-                                    eta=0.001,
-                                    steps=110000,
+                                    steps=50000,
                                     debug=True,
                                     every_nth=500
                                     )
     x, y = zip(*costs)
+    y = [a/y[0] for a in y]
     plt.plot(x, y, color='blue')
-    plt.title("Cost vs Iter")
+    plt.title("Rel Cost vs Iter")
     plt.xlabel("Iter")
-    plt.ylabel("Cost")
+    plt.ylabel("Rel Cost")
     plt.show()
     # all_costs[hidden_nodes] = costs
 
