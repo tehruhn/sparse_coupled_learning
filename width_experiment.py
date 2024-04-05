@@ -5,6 +5,8 @@ from task_utils import generate_regression_data
 from LinearNetwork import LinearNetwork
 from LinearNetworkSolver import LinearNetworkSolver
 
+import matplotlib.pyplot as plt
+
 np.random.seed(42)
 
 # hidden_nodes_range_list = list(range(100, 10001, 100))
@@ -63,11 +65,18 @@ for hidden_nodes in hidden_nodes_range_list:
                                     ground_nodes=[S[0]],
                                     in_node=tri,
                                     out_node=trt,
-                                    lr=1.e-2,
-                                    steps=50000,
+                                    lr=0.05,
+                                    eta=0.001,
+                                    steps=110000,
                                     debug=True,
-                                    every_nth=1000
+                                    every_nth=500
                                     )
+    x, y = zip(*costs)
+    plt.plot(x, y, color='blue')
+    plt.title("Cost vs Iter")
+    plt.xlabel("Iter")
+    plt.ylabel("Cost")
+    plt.show()
     # all_costs[hidden_nodes] = costs
 
     # # Save after every completion of perform_trial for each hidden_nodes configuration

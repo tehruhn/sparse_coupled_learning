@@ -569,7 +569,7 @@ if __name__ == "__main__":
                             in_node=tri,
                             out_node=trt,
                             lr=1.e-1,
-                            steps=50000,
+                            steps=2000,
                             debug=True
                             )
     print(costs)
