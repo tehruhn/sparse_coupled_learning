@@ -568,8 +568,8 @@ if __name__ == "__main__":
                             ground_nodes=ground_nodes,
                             in_node=tri,
                             out_node=trt,
-                            lr=1.e-3,
-                            steps=1000,
+                            lr=1.e-1,
+                            steps=50000,
                             debug=True
                             )
     print(costs)

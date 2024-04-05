@@ -4,9 +4,10 @@ np.random.seed(0)
 def generate_regression_data():
 
     input_pairs = np.random.uniform(0, 1, (420, 2))
+    # Coeffs = array([[0.2,0.3],[0.1,0.5]]
 
-    VD1 = 0.15 * input_pairs[:, 0] + 0.20 * input_pairs[:, 1]
-    VD2 = 0.25 * input_pairs[:, 0] + 0.10 * input_pairs[:, 1]
+    VD1 = 0.2 * input_pairs[:, 0] + 0.3 * input_pairs[:, 1]
+    VD2 = 0.1 * input_pairs[:, 0] + 0.5 * input_pairs[:, 1]
 
     targets = np.vstack((VD1, VD2)).T
 

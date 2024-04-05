@@ -60,3 +60,11 @@ PSEUDOCODE
 - package name (something)
 - documentation etc (TODO)
 - rerun width
+
+April 5, 2024
+
+- not expected to be groundbreaking
+- just dump everything we need to know
+- we made it practically usable
+- show few examples
+- in the end we can say we used it to do something new
