@@ -486,6 +486,7 @@ class LinearNetworkSolver:
             eta (float): Small positive parameter for the update equation.
             lr (float): Learning rate for conductance updates.
             steps (int): Number of optimization steps to perform.
+            init_strategy (str) : random, ones, decimal
 
         Returns:
             np.ndarray: The final conductances after optimization.
@@ -511,8 +512,10 @@ class LinearNetworkSolver:
         )
         if init_strategy == "random":
             K = np.random.uniform(0.5, 1.5, self._network.NE)
-        else:
+        elif init_strategy == "ones":
             K = np.ones(self._network.NE)
+        else:
+            K = np.ones(self._network.NE)/10.0
         sK = spdiags(K, 0, self._network.NE, self._network.NE, format='csc')
 
         PFs, PCs, CEq0 = self.compute_cost_for_task(sK)
@@ -542,7 +545,8 @@ class LinearNetworkSolver:
             if step % every_nth == 0:
                 _, _, CEq = self.compute_cost_for_task(sK)
                 if debug :
-                    print(f"Step {step}, Relative Cost {CEq / CEq0:.8f}, Norm of Conductance Change {norm(DK):.8f}, Power {self.compute_power(K, PF)}")
+                    ratio = "{:e}".format(CEq / CEq0)
+                    print(f"Step {step}, Relative Cost {ratio}, Norm of Conductance Change {norm(DK):.8f}, Power {self.compute_power(K, PF)}")
                 all_costs.append((step, CEq))
 
         return K, all_costs

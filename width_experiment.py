@@ -15,8 +15,8 @@ hidden_nodes_range_list = [10]
 all_costs = {}
 
 # Initialize data generation
-# tri, trt, tei, tet = generate_regression_data()
-tri, trt, tei, tet = generate_random_regression_data(2, 2)
+tri, trt, tei, tet = generate_regression_data()
+# tri, trt, tei, tet = generate_random_regression_data(2, 2)
 
 def save_costs(all_costs):
     # Helper function to save costs to a file
@@ -48,27 +48,24 @@ for hidden_nodes in hidden_nodes_range_list:
     print("hidden nodes", hidden_nodes)
     source, target, num_hidden = 3, 2, 1
     G, S, H, T = create_network(source, hidden_nodes, target, num_hidden)
-    # network_dict = {}
-    # network_dict['NN'] = G.number_of_nodes()
-    # network_dict['NE'] = G.number_of_edges()
-    # network_dict['EI'] = [edge[0] for edge in G.edges()]
-    # network_dict['EJ'] = [edge[1] for edge in G.edges()]
-    # f = open("graph_dict_tarun.txt", "w")
-    # f.write(str(network_dict))
-    # f.close()
-    # print("Wrote")
+    # nn = G.number_of_nodes()
+    # ne = G.number_of_edges()
+    # ei = [edge[0] for edge in G.edges()]
+    # ej = [edge[1] for edge in G.edges()]
+    # print(nn, ne, ei, ej)
     linNet = LinearNetwork(G)
     solver = LinearNetworkSolver(linNet)
     
-    K, costs = solver.perform_trial(source_nodes=S[1:], 
+    K, costs = solver.perform_trial(source_nodes=S[0:-1], 
                                     target_nodes=T,
-                                    ground_nodes=[S[0]],
+                                    ground_nodes=[S[-1]],
                                     in_node=tri,
                                     out_node=trt,
-                                    lr=0.05,
-                                    steps=10000,
+                                    lr=0.1,
+                                    steps=150000,
                                     debug=True,
-                                    every_nth=500
+                                    every_nth=500,
+                                    init_strategy="ones"
                                     )
     x, y = zip(*costs)
     y = [a/y[0] for a in y]
@@ -76,6 +73,7 @@ for hidden_nodes in hidden_nodes_range_list:
     plt.title("Rel Cost vs Iter")
     plt.xlabel("Iter")
     plt.ylabel("Rel Cost")
+    plt.yscale('log')
     plt.show()
     # all_costs[hidden_nodes] = costs
 

@@ -27,48 +27,31 @@ def create_network(source, hidden, target, num_hidden=1):
     
     # Create hidden layers
     hidden_layers = []
-    if num_hidden > 0:
-        for layer in range(num_hidden):
-            hidden_nodes = []
-            for _ in range(hidden):
-                hidden_nodes.append(current_index)
-                current_index += 1
-            hidden_layers.append(hidden_nodes)
-            G.add_nodes_from(hidden_nodes)
-            
-            # Connect nodes
-            if layer == 0:
-                for source_node in source_nodes:
-                    for hidden_node in hidden_nodes:
-                        G.add_edge(source_node, hidden_node)
-                        G.add_edge(hidden_node, source_node)  # Add reverse connection
-            else:
-                for prev_hidden_node in hidden_layers[layer-1]:
-                    for hidden_node in hidden_nodes:
-                        G.add_edge(prev_hidden_node, hidden_node)
-                        G.add_edge(hidden_node, prev_hidden_node)  # Add reverse connection
-    else:
-        # If there are no hidden layers, directly connect source to target nodes
-        for source_node in source_nodes:
-            for target_node in target_nodes:
-                G.add_edge(source_node, target_node)
-                G.add_edge(target_node, source_node)  # Add reverse connection
+    for layer in range(num_hidden):
+        hidden_nodes = []
+        for _ in range(hidden):
+            hidden_nodes.append(current_index)
+            current_index += 1
+        hidden_layers.append(hidden_nodes)
+        G.add_nodes_from(hidden_nodes)
+        
+        # Connect nodes
+        if layer == 0:
+            for source_node in source_nodes:
+                for hidden_node in hidden_nodes:
+                    G.add_edge(source_node, hidden_node)
+                    G.add_edge(hidden_node, source_node)  # Add reverse connection
+        else:
+            for prev_hidden_node in hidden_layers[layer-1]:
+                for hidden_node in hidden_nodes:
+                    G.add_edge(prev_hidden_node, hidden_node)
+                    G.add_edge(hidden_node, prev_hidden_node)  # Add reverse connection
     
-    # Connect nodes to target nodes depending on the presence of hidden layers
+    # # Connect nodes to target nodes depending on the presence of hidden layers
     for node in hidden_layers[-1] if num_hidden > 0 else source_nodes:
         for target_node in target_nodes:
             G.add_edge(node, target_node)
             G.add_edge(target_node, node)  # Add reverse connection
-    
-    # Connect source nodes among themselves
-    for i in range(1, source):
-        G.add_edge(source_nodes[i-1], source_nodes[i])
-        G.add_edge(source_nodes[i], source_nodes[i-1])
-    
-    # Connect target nodes among themselves
-    for i in range(1, target):
-        G.add_edge(target_nodes[i-1], target_nodes[i])
-        G.add_edge(target_nodes[i], target_nodes[i-1])
     
     return G, source_nodes, hidden_layers, target_nodes
 
