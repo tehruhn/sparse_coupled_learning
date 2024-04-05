@@ -66,7 +66,7 @@ for hidden_nodes in hidden_nodes_range_list:
                                     in_node=tri,
                                     out_node=trt,
                                     lr=0.05,
-                                    steps=50000,
+                                    steps=10000,
                                     debug=True,
                                     every_nth=500
                                     )
