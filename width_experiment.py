@@ -46,7 +46,7 @@ def save_costs(all_costs):
 # For others
 for hidden_nodes in hidden_nodes_range_list:
     print("hidden nodes", hidden_nodes)
-    source, target, num_hidden = 3, 2, 1
+    source, target, num_hidden = 3, 2, 2
     G, S, H, T = create_network(source, hidden_nodes, target, num_hidden)
     # nn = G.number_of_nodes()
     # ne = G.number_of_edges()
@@ -61,11 +61,11 @@ for hidden_nodes in hidden_nodes_range_list:
                                     ground_nodes=[S[-1]],
                                     in_node=tri,
                                     out_node=trt,
-                                    lr=0.1,
+                                    lr=0.05,
                                     steps=150000,
                                     debug=True,
                                     every_nth=500,
-                                    init_strategy="ones"
+                                    init_strategy="random"
                                     )
     x, y = zip(*costs)
     y = [a/y[0] for a in y]

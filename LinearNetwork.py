@@ -44,6 +44,8 @@ class LinearNetwork:
             self.load_from_pickle(input_data)
         elif isinstance(input_data, nx.Graph):
             self.extract_graph_properties_from_networkx(input_data)
+        elif isinstance(input_data, dict):
+            self.initialize_graph_dict(input_data)
         elif input_data is not None:
             raise ValueError("Unsupported type for input_data")
 
