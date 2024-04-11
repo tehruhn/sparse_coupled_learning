@@ -43,14 +43,16 @@ def SquareGrid(a, b, Periodic=False): # construct a square grid
 
 def generate_node_and_edge_data(sources, targets, 
                                 sourceedges, targetedges):
+    np.random.seed(42)
     NodeData = np.random.randn(sources)
     OutNodeData = np.random.randn(targets) * 0.3
     EdgeData = np.random.randn(sourceedges)
     OutEdgeData = np.random.randn(targetedges) * 0.3
-    return (NodeData, OutNodeData, EdgeData, OutEdgeData)
+    return (NodeData.reshape(1, -1), OutNodeData.reshape(1, -1), 
+            EdgeData.reshape(1, -1), OutEdgeData.reshape(1, -1))
 
 if __name__ == "__main__":
-    NN, NE, EI, EJ = SquareGrid(5, 5, True)
+    NN, NE, EI, EJ = SquareGrid(3, 3, False)
     graph_dict = {'NN':NN, "NE":NE, "EI":EI, "EJ":EJ}
     print(graph_dict)
     
@@ -60,7 +62,7 @@ if __name__ == "__main__":
     targetedges = 0
 
     trials = 1
-    nTaskTypes = 2
+    nTaskTypes = 1
     nTasksPerType = 1
     eta = 1.e-3
     lr = 0.05
@@ -82,8 +84,14 @@ if __name__ == "__main__":
     linNet = LinearNetwork(graph_dict)
     solver = LinearNetworkSolver(linNet)
 
+    print(SourceNodes)
+    print(TargetNodes)
+    print(GroundNodes)
+    print(tri.shape)
+    print(trt.shape)
+
     K, costs = solver.perform_trial(source_nodes=SourceNodes, 
-                                    target_nodes=TargetEdges,
+                                    target_nodes=TargetNodes,
                                     ground_nodes=GroundNodes,
                                     in_node=tri,
                                     out_node=trt,

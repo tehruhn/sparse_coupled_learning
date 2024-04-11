@@ -169,7 +169,7 @@ class LinearNetworkSolver:
         self.sDMF = sDMF 
         self.sDMC = sDMC
         self.sBLF = sBLF 
-        self.sBLC =sBLC 
+        self.sBLC = sBLC 
         self.sDot = sDot
 
 

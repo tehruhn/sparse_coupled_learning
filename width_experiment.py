@@ -18,6 +18,9 @@ all_costs = {}
 tri, trt, tei, tet = generate_regression_data()
 # tri, trt, tei, tet = generate_random_regression_data(2, 2)
 
+print(tri.shape)
+print(trt.shape)
+
 def save_costs(all_costs):
     # Helper function to save costs to a file
     with open('all_sizes.json', 'w') as f:
