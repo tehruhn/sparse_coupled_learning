@@ -52,12 +52,12 @@ def generate_node_and_edge_data(sources, targets,
             EdgeData.reshape(1, -1), OutEdgeData.reshape(1, -1))
 
 if __name__ == "__main__":
-    NN, NE, EI, EJ = SquareGrid(3, 3, False)
+    NN, NE, EI, EJ = SquareGrid(5, 5, True)
     graph_dict = {'NN':NN, "NE":NE, "EI":EI, "EJ":EJ}
     print(graph_dict)
     
-    sources = 2
-    targets = 1
+    sources = 4
+    targets = 2
     sourceedges = 0
     targetedges = 0
 
@@ -74,8 +74,11 @@ if __name__ == "__main__":
 
     GroundNodes = np.array([NN-1])
 
+    np.random.seed(42)
     NodeList = np.random.choice(range(NN-1), size=sources+targets, replace=False)
     EdgeList = np.random.choice(range(NE), size=sourceedges+targetedges, replace=False)
+    print(tri)
+    print(trt)
     SourceNodes = NodeList[:sources]
     TargetNodes = NodeList[sources:]
     SourceEdges = EdgeList[:sourceedges]
@@ -84,11 +87,11 @@ if __name__ == "__main__":
     linNet = LinearNetwork(graph_dict)
     solver = LinearNetworkSolver(linNet)
 
-    print(SourceNodes)
-    print(TargetNodes)
-    print(GroundNodes)
-    print(tri.shape)
-    print(trt.shape)
+    # print(SourceNodes)
+    # print(TargetNodes)
+    # print(GroundNodes)
+    # print(tri.shape)
+    # print(trt.shape)
 
     K, costs = solver.perform_trial(source_nodes=SourceNodes, 
                                     target_nodes=TargetNodes,
@@ -98,6 +101,6 @@ if __name__ == "__main__":
                                     lr=0.05,
                                     steps=15000,
                                     debug=True,
-                                    every_nth=100,
+                                    every_nth=500,
                                     init_strategy="ones"
                                     )
