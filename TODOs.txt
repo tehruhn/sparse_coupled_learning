@@ -68,3 +68,13 @@ April 5, 2024
 - we made it practically usable
 - show few examples
 - in the end we can say we used it to do something new
+
+April 12, 2024
+
+- THESE ARE ENOUGH
+- the extent of connectivity (connect to the next layer, and some above and below that - else not geometrically neighbours)
+- effect of width (1-10 nodes for physics) (width similar to sources and targets)
+- effect of topology
+- scaling behaviour (some interesting behavior in small nets)
+- classification (subset of iris)
+- double learning (for any size) - purely physical phenomenon
