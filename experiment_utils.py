@@ -40,18 +40,18 @@ def create_network(source, hidden, target, num_hidden=1):
             for source_node in source_nodes:
                 for hidden_node in hidden_nodes:
                     G.add_edge(source_node, hidden_node)
-                    G.add_edge(hidden_node, source_node)  # Add reverse connection
+                    # G.add_edge(hidden_node, source_node)  # Add reverse connection
         else:
             for prev_hidden_node in hidden_layers[layer-1]:
                 for hidden_node in hidden_nodes:
                     G.add_edge(prev_hidden_node, hidden_node)
-                    G.add_edge(hidden_node, prev_hidden_node)  # Add reverse connection
+                    # G.add_edge(hidden_node, prev_hidden_node)  # Add reverse connection
     
     # # Connect nodes to target nodes depending on the presence of hidden layers
     for node in hidden_layers[-1] if num_hidden > 0 else source_nodes:
         for target_node in target_nodes:
             G.add_edge(node, target_node)
-            G.add_edge(target_node, node)  # Add reverse connection
+            # G.add_edge(target_node, node)  # Add reverse connection
     
     return G, source_nodes, hidden_layers, target_nodes
 
