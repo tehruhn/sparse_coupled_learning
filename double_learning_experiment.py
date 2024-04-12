@@ -7,17 +7,11 @@ from LinearNetworkSolver import LinearNetworkSolver
 
 import matplotlib.pyplot as plt
 
-np.random.seed(42)
-
-hidden_nodes_range_list = [10]
+hidden_nodes_range_list = [20]
 all_costs = {}
 
 # Initialize data generation
 tri, trt, tei, tet = generate_regression_data()
-# tri, trt, tei, tet = generate_random_regression_data(2, 2)
-
-print(tri.shape)
-print(trt.shape)
 
 def save_costs(all_costs):
     # Helper function to save costs to a file
@@ -38,7 +32,7 @@ for hidden_nodes in hidden_nodes_range_list:
                                     in_node=tri,
                                     out_node=trt,
                                     lr=0.05,
-                                    steps=150000,
+                                    steps=250000,
                                     debug=True,
                                     every_nth=1000,
                                     init_strategy="random"
