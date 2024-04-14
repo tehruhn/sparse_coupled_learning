@@ -32,7 +32,7 @@ for hidden_nodes in hidden_nodes_range_list:
                                     in_node=tri,
                                     out_node=trt,
                                     lr=0.05,
-                                    steps=250000,
+                                    steps=150000,
                                     debug=True,
                                     every_nth=1000,
                                     init_strategy="random"
@@ -40,9 +40,9 @@ for hidden_nodes in hidden_nodes_range_list:
     x, y = zip(*costs)
     y = [a/y[0] for a in y]
     plt.plot(x, y, color='blue')
-    plt.title("Rel Cost vs Iter")
-    plt.xlabel("Iter")
-    plt.ylabel("Rel Cost")
+    plt.title("Learning in two steps")
+    plt.xlabel("Iterations")
+    plt.ylabel("Scaled Cost")
     plt.yscale('log')
     plt.show()
     # all_costs[hidden_nodes] = costs

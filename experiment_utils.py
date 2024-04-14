@@ -81,7 +81,7 @@ def generate_random_regression_data(n_inputs, n_outputs, n_samples=420, train_sp
 
 if __name__ == "__main__":
     source = 3
-    hidden = 10
+    hidden = 20
     target = 2
     num_hidden = 1
     G, source_nodes, hidden_layers, target_nodes = create_network(source, hidden, target, num_hidden)
