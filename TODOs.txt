@@ -77,6 +77,7 @@ April 12, 2024
 - effect of width (1-10 nodes for physics) (width similar to sources and targets)
 
 - effect of topology
+    added topology stuff
 
 - scaling behaviour (some interesting behavior in small nets)
     added memory and timing stuff for several sizes

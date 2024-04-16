@@ -11,7 +11,7 @@ np.random.seed(42)
 
 # hidden_nodes_range_list = list(range(100, 10001, 100))
 # hidden_nodes_range_list = list(range(2, 100, 2))
-hidden_nodes_range_list = [10]
+hidden_nodes_range_list =  list(range(1, 11))
 all_costs = {}
 
 # Initialize data generation
@@ -49,7 +49,7 @@ def save_costs(all_costs):
 # For others
 for hidden_nodes in hidden_nodes_range_list:
     print("hidden nodes", hidden_nodes)
-    source, target, num_hidden = 3, 2, 2
+    source, target, num_hidden = 3, 2, 1
     G, S, H, T = create_network(source, hidden_nodes, target, num_hidden)
     # nn = G.number_of_nodes()
     # ne = G.number_of_edges()
