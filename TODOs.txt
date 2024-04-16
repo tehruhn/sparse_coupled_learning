@@ -79,6 +79,7 @@ April 12, 2024
 - effect of topology
 
 - scaling behaviour (some interesting behavior in small nets)
+    added memory and timing stuff for several sizes
 
 - classification (subset of iris)
 
