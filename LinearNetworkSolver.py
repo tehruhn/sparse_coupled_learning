@@ -496,6 +496,8 @@ class LinearNetworkSolver:
         """
         if self._network is None:
             raise ValueError("Initialize network first")
+        if len(ground_nodes) == 0:
+            raise ValueError("No empty groundnetworks")
 
         CompSteps = np.unique(np.around(np.r_[0, np.logspace(0, np.log10(steps - 1), 430)])).astype(int)
 

@@ -10,11 +10,9 @@ import matplotlib.pyplot as plt
 hidden_nodes_range_list = [20]
 all_costs = {}
 
-# Initialize data generation
 tri, trt, tei, tet = generate_regression_data()
 
 def save_costs(all_costs):
-    # Helper function to save costs to a file
     with open('all_sizes.json', 'w') as f:
         json.dump(all_costs, f)
 
@@ -47,5 +45,4 @@ for hidden_nodes in hidden_nodes_range_list:
     plt.show()
     # all_costs[hidden_nodes] = costs
 
-    # # Save after every completion of perform_trial for each hidden_nodes configuration
     # save_costs(all_costs)
