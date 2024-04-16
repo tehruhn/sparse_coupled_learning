@@ -9,9 +9,7 @@ from typing import Optional, List, Tuple
 import matplotlib.pyplot as plt
 import networkx
 
-from task_utils import *
-
-from LinearNetwork import LinearNetwork, LinearNetworkError
+from CLSolver.LinearNetwork import LinearNetwork, LinearNetworkError
 
 class LinearNetworkSolver:
     """
@@ -552,35 +550,3 @@ class LinearNetworkSolver:
                 all_costs.append((step, CEq))
 
         return K, all_costs
-
-
-
-if __name__ == "__main__":
-
-    # make the linear network
-    linNet = LinearNetwork("./Net1.pkl")
-    g = linNet.to_networkx_graph()
-    print(g)
-    solver = LinearNetworkSolver(linNet)
-    
-    # add source, target, ground nodes
-    source_nodes = np.array([3, 8], dtype=int)
-    target_nodes = np.array([4, 5], dtype=int)
-    ground_nodes = np.array([2], dtype=int)
-
-    # generate data
-    tri, trt = encode_regression_data_in_correct_format()
-
-    # pass data to the network and train it
-    K, costs = solver.perform_trial(source_nodes=source_nodes, 
-                            target_nodes=target_nodes,
-                            ground_nodes=ground_nodes,
-                            in_node=tri,
-                            out_node=trt,
-                            lr=1.e-1,
-                            steps=2000,
-                            debug=True
-                            )
-    print(costs)
-    
-
