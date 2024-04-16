@@ -77,11 +77,6 @@ def generate_random_regression_data(n_inputs, n_outputs, n_samples=420, train_sp
     
     return (train_inputs, train_targets, test_inputs, test_targets)
 
-
-def create_partial_network(source, hidden, targets):
-    pass
-
-
 if __name__ == "__main__":
     source = 3
     hidden = 20
