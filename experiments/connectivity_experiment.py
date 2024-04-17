@@ -20,8 +20,9 @@ if __name__ == "__main__":
 
     np.random.seed(42)
 
-    sources = 9
-    fanouts = [3, 5, 7, 9]
+    sources = 25
+    fanouts = list(range(3, sources, 2))
+    vals_dict = {}
 
     for fanout in fanouts:
         G, S, H, T = create_low_connectivity_network(sources, fanout)
@@ -45,6 +46,7 @@ if __name__ == "__main__":
         x, y = zip(*costs)
         y = [a / y[0] for a in y]
         plt.plot(x, y, label=f"Adj Nodes: {fanout}")
+        vals_dict[fanout] = costs[-1]
 
     plt.title("Relative Cost vs Iterations for different Fanouts")
     plt.xlabel("Iterations")
@@ -53,3 +55,18 @@ if __name__ == "__main__":
     plt.legend()
     plt.show()
 
+    for a, b in vals_dict.items():
+        print(a, "&", b)
+
+
+# 3 & (150000, 0.003769317255230386)
+# 5 & (150000, 0.00323353844753515)
+# 7 & (150000, 0.0035081807267149556)
+# 9 & (150000, 0.0032138291797051944)
+# 11 & (150000, 0.003275181096251779)
+# 13 & (150000, 0.003341389185842649)
+# 15 & (150000, 0.0029873299338378646)
+# 17 & (150000, 0.003110546813612148)
+# 19 & (150000, 0.0037856266207467295)
+# 21 & (150000, 0.003467669581230366)
+# 23 & (150000, 0.0025103826957206506)
