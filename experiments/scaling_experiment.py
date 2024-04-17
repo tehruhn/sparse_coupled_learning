@@ -2,8 +2,8 @@
 import json
 import os
 import time
-import psutil
 import sys
+import tracemalloc
 import numpy as np
 
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -23,7 +23,6 @@ def measure_performance(G, tri, trt):
     
     # Measure time and memory usage for one step of the solver
     start_time = time.time()
-    start_memory = psutil.Process().memory_info().rss
 
     K, costs = solver.perform_trial(source_nodes=[0, 1], 
                                     target_nodes=[num_nodes-2, 
@@ -36,12 +35,10 @@ def measure_performance(G, tri, trt):
                                     debug=True)
     
     end_time = time.time()
-    end_memory = psutil.Process().memory_info().rss
     
     execution_time = end_time - start_time
-    memory_usage = end_memory - start_memory
     
-    return execution_time, memory_usage
+    return execution_time
 
 if __name__ == "__main__":
     
@@ -49,8 +46,8 @@ if __name__ == "__main__":
     tri, trt, tei, tet = generate_regression_data_for_experiment()
 
     # define the range of graph sizes to test
-    num_nodes_range = [100, 250, 500, 1000, 2000, 3000, 4000, 5000]
-    num_edges_range = [elem*5 for elem in num_nodes_range]
+    num_nodes_range = list(range(50, 1501, 50))
+    num_edges_range = [elem*7 for elem in num_nodes_range]
 
 
     execution_times = []
@@ -59,8 +56,11 @@ if __name__ == "__main__":
     for num_nodes, num_edges in zip(num_nodes_range, num_edges_range):
         print(f"Testing graph size: {num_nodes} nodes, {num_edges} edges")
         G = create_random_network(num_nodes, num_edges)
-        execution_time, memory_usage = measure_performance(G, tri, trt)
+        tracemalloc.start()
+        execution_time = measure_performance(G, tri, trt)
         execution_times.append(execution_time)
+        memory_usage = tracemalloc.get_traced_memory()[1]
+        print(memory_usage)
         memory_usages.append(memory_usage)
 
     # Plot execution time vs graph size
@@ -80,3 +80,5 @@ if __name__ == "__main__":
     plt.title('Memory Usage vs Graph Size')
     plt.grid(True)
     plt.show()
+
+    tracemalloc.stop()
