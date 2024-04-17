@@ -15,10 +15,9 @@ from CLSolver.LinearNetworkSolver import LinearNetworkSolver
 import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
-
     np.random.seed(42)
 
-    hidden_nodes_range_list =  list(range(1, 11))
+    hidden_nodes_range_list = list(range(1, 11))
     all_costs = {}
 
     # initialize data generation
@@ -32,8 +31,8 @@ if __name__ == "__main__":
 
         linNet = LinearNetwork(G)
         solver = LinearNetworkSolver(linNet)
-        
-        K, costs = solver.perform_trial(source_nodes=S[0:-1], 
+
+        K, costs = solver.perform_trial(source_nodes=S[0:-1],
                                         target_nodes=T,
                                         ground_nodes=[S[-1]],
                                         in_node=tri,
@@ -45,10 +44,12 @@ if __name__ == "__main__":
                                         init_strategy="random"
                                         )
         x, y = zip(*costs)
-        y = [a/y[0] for a in y]
-        plt.plot(x, y, color='blue')
-        plt.title("Rel Cost vs Iter")
-        plt.xlabel("Iter")
-        plt.ylabel("Rel Cost")
-        plt.yscale('log')
-        plt.show()
+        y = [a / y[0] for a in y]
+        plt.plot(x, y, label=f"Hidden Nodes: {hidden_nodes}")
+
+    plt.title("Relative Cost vs Iterations for different Widths")
+    plt.xlabel("Iterations")
+    plt.ylabel("Relative Cost")
+    plt.yscale('log')
+    plt.legend()
+    plt.show()
