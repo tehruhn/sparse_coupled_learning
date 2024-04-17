@@ -20,7 +20,7 @@ if __name__ == "__main__":
 
     np.random.seed(42)
 
-    sources = 10
+    sources = 9
     fanouts = [3, 5, 7, 9]
 
     for fanout in fanouts:
