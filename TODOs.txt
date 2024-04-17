@@ -41,7 +41,7 @@ Mar 29, 2024
 - need to figure out what the label is from output
 - take all training data, pass through untrained networks 
 - now take all average for all training data associated with class 1
-- that average is now the desired started
+- that average is now the desired target
 - sometimes reassiging labels helps
 - just get free state values at that node
 - we dont want to do mean sq error like usual
@@ -92,3 +92,6 @@ April 12, 2024
 
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, project_root)
+
+- proof for sgd
+- proof for cross entropy
