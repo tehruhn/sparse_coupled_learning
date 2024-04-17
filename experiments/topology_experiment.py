@@ -25,7 +25,7 @@ def run_solver(G, tri, trt):
         in_node=tri, 
         out_node=trt, 
         lr=0.05, 
-        steps=100, 
+        steps=10000, 
         debug=True,
         every_nth=5000)
     
@@ -50,6 +50,8 @@ if __name__ == "__main__":
             G = create_topology_network(num_nodes, topology)
             final_cost = run_solver(G, tri, trt)
             final_costs[topology].append(final_cost)
+    
+    print(final_costs)
 
     # plot the final costs for each topology
     plt.figure(figsize=(10, 6))
