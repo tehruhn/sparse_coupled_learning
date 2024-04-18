@@ -39,6 +39,8 @@ class LinearNetworkSolver:
 
         self.ntasks = 0
 
+        self.PFs = None
+
     @property
     def source_nodes(self) -> np.ndarray:
         """Gets the source nodes."""
@@ -548,5 +550,5 @@ class LinearNetworkSolver:
                     ratio = "{:e}".format(CEq / CEq0)
                     print(f"Step {step}, Relative Cost {ratio}, Norm of Conductance Change {norm(DK):.8f}, Power {self.compute_power(K, PF)}")
                 all_costs.append((step, CEq))
-
+        self.PFs = PFs
         return K, all_costs

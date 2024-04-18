@@ -29,14 +29,7 @@ def extract_linearly_separable_points(features, target_classes):
 
     return X_subset, y_subset
 
-if __name__ == "__main__":
-    features = [0, 1, 2, 3]
-    target_classes = [0, 1]
-    X_subset, y_subset = extract_linearly_separable_points(features, target_classes)
+def train_classifier(G, X_data, y_data):
+    pass
 
-    print("Number of samples in the first class:", np.sum(y_subset == -1))
-    print("Number of samples in the second class:", np.sum(y_subset == 1))
 
-    print("Subset of the dataset:")
-    print(X_subset[:5])
-    print(y_subset[:5])
