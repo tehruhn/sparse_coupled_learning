@@ -38,8 +38,8 @@ if __name__ == "__main__":
                                         in_node=tri,
                                         out_node=trt,
                                         lr=0.05,
-                                        steps=150000,
-                                        debug=False,
+                                        steps=250000,
+                                        debug=True,
                                         every_nth=500,
                                         init_strategy="random"
                                         )
