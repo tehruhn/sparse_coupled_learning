@@ -20,13 +20,14 @@ if __name__ == "__main__":
 
     np.random.seed(42)
 
-    sources = 25
-    fanouts = list(range(3, sources, 2))
+    sources = None
+    fanouts = [2, 4, 8, 16, 32, 64, 128]
     vals_dict = {}
 
     for fanout in fanouts:
+        sources = int(256/fanout)
         G, S, H, T = create_low_connectivity_network(sources, fanout)
-        # draw_wide_network(G, source_nodes, hidden_layers, target_nodes)
+        # draw_wide_network(G, S, H, T)
         tri, trt, tei, tet = generate_regression_data_for_experiment()
 
         linNet = LinearNetwork(G)
