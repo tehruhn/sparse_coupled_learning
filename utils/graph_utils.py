@@ -106,22 +106,29 @@ def create_random_network(num_nodes, num_edges):
     G = nx.gnm_random_graph(num_nodes, num_edges)
     return G
 
-def create_topology_network(num_nodes, topology):
+def create_topology_network(num_edges, topology):
     """
-    Create a network with given number of nodes and of a 
-    certain type of topology.
+    Create a network with a given number of edges and of a certain type of topology,
+    while ensuring that all topologies have the same number of edges.
     """
     if topology == 'random':
-        G = nx.gnm_random_graph(num_nodes, num_nodes * 5)
+        num_nodes = int(num_edges / 5)
+        G = nx.gnm_random_graph(num_nodes, num_edges)
     elif topology == 'scale_free':
-        G = nx.barabasi_albert_graph(num_nodes, 2)
+        num_nodes = int(num_edges / 2)
+        G = nx.barabasi_albert_graph(num_nodes, 2, seed=42)
     elif topology == 'small_world':
-        G = nx.watts_strogatz_graph(num_nodes, 4, 0.1)
+        num_nodes = int(num_edges / 4)
+        G = nx.watts_strogatz_graph(num_nodes, 4, 0.1, seed=42)
     elif topology == 'random_regular':
-        G = nx.random_regular_graph(4, num_nodes)
+        degree = 4
+        num_nodes = num_edges // degree
+        G = nx.random_regular_graph(degree, num_nodes, seed=42)
     elif topology == 'ring':
+        num_nodes = num_edges
         G = nx.cycle_graph(num_nodes)
     elif topology == 'complete':
+        num_nodes = int((1 + (1 + 8 * num_edges) ** 0.5) / 2)
         G = nx.complete_graph(num_nodes)
     else:
         raise ValueError(f"Invalid topology: {topology}")
@@ -131,6 +138,16 @@ def create_topology_network(num_nodes, topology):
         components = nx.connected_components(G)
         largest_component = max(components, key=len)
         G = G.subgraph(largest_component).copy()
+    
+    # add or remove edges to achieve the exact number of edges
+    current_num_edges = G.number_of_edges()
+    if current_num_edges < num_edges:
+        non_edges = list(nx.non_edges(G))
+        G.add_edges_from(non_edges[:num_edges - current_num_edges])
+    elif current_num_edges > num_edges:
+        edges_to_remove = current_num_edges - num_edges
+        edges = list(G.edges())
+        G.remove_edges_from(edges[:edges_to_remove])
     
     return G
 

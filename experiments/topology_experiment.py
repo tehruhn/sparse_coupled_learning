@@ -17,6 +17,7 @@ import matplotlib.pyplot as plt
 def run_solver(G, tri, trt):
     linNet = LinearNetwork(G)
     solver = LinearNetworkSolver(linNet)
+    num_nodes = G.number_of_nodes()
     
     K, costs = solver.perform_trial(
         source_nodes=[0, 1], 
@@ -25,7 +26,7 @@ def run_solver(G, tri, trt):
         in_node=tri, 
         out_node=trt, 
         lr=0.05, 
-        steps=10000, 
+        steps=25000, 
         debug=True,
         every_nth=5000)
     
@@ -37,8 +38,13 @@ if __name__ == "__main__":
     tri, trt, tei, tet = generate_regression_data_for_experiment()
 
     # define the number of nodes and the topologies to test
-    num_nodes = 100
-    topologies = ['random', 'scale_free', 'small_world', 'random_regular', 'ring', 'complete']
+    num_edges = 1000
+    topologies = ['random', 
+                  'scale_free', 
+                  'small_world', 
+                  'random_regular', 
+                  'ring', 
+                  'complete']
 
     final_costs = {}
 
@@ -47,17 +53,21 @@ if __name__ == "__main__":
         final_costs[topology] = []
         
         for _ in range(10):  # run 10 trials for each topology
-            G = create_topology_network(num_nodes, topology)
+            G = create_topology_network(num_edges, topology)
             final_cost = run_solver(G, tri, trt)
             final_costs[topology].append(final_cost)
     
-    print(final_costs)
 
     # plot the final costs for each topology
     plt.figure(figsize=(10, 6))
     plt.boxplot([final_costs[topology] for topology in topologies], labels=topologies)
     plt.xlabel('Topology')
     plt.ylabel('Final Cost')
-    plt.title('Final Cost vs Topology')
+    plt.title(f'Final Cost vs Topology for {num_edges} edges')
     plt.grid(True)
     plt.show()
+
+    for a, b in final_costs.items():
+        print(a, "&", np.mean(b), "&", np.std(b))
+
+

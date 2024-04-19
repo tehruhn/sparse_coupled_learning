@@ -95,3 +95,20 @@ sys.path.insert(0, project_root)
 
 - proof for sgd
 - proof for cross entropy
+
+For the draft, I guess my main suggestion would be to compare 
+systems with the same number of edges rather than the same number 
+of nodes, since the number of parameters is the number of edges. 
+
+For example, in the studies of network topology, I’m not sure 
+how many of your results are due to the difference in the number 
+of parameters rather than the topology.  
+
+Also, if you could do a 
+few different sizes (number of edges) to see if the topology 
+dependence is consistent as you increase the number of parameters, 
+that would be very useful. 
+
+In the case of network connectivity, 
+you could increase the width of the hidden layer for lower 
+connectivities so that the number of edges is fixed.
