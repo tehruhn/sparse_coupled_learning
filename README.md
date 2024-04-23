@@ -19,16 +19,14 @@ This repository contains a Python implementation of a Linear Network Solver capa
 - [Utilities](#utilities)
   - [Data Utils](#data-utils)
   - [Graph Utils](#graph-utils)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Installation
 
 To use this Linear Network Solver, you need to have Python installed. Clone the repository and install the required dependencies:
 
 ```bash
-git clone https://github.com/yourusername/linear-network-solver.git
-cd linear-network-solver
+git clone git@github.com:tehruhn/sparse_coupled_learning.git
+cd sparse_coupled_learning
 pip install -r requirements.txt
 ```
 
