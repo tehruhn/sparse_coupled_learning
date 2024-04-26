@@ -1,4 +1,5 @@
 import networkx as nx
+import numpy as np
 import matplotlib.pyplot as plt
 
 def create_wide_network(source, hidden, target, num_hidden=1):
@@ -130,6 +131,15 @@ def create_topology_network(num_edges, topology):
     elif topology == 'complete':
         num_nodes = int((1 + (1 + 8 * num_edges) ** 0.5) / 2)
         G = nx.complete_graph(num_nodes)
+    elif topology == 'square_lattice':
+        side_length = int(np.sqrt(num_edges / 2))
+        G = nx.grid_2d_graph(side_length, side_length)
+        G = nx.convert_node_labels_to_integers(G)
+    elif topology == 'triangular_lattice':
+        side_length = int(np.sqrt(num_edges / 3))
+        num_nodes = side_length * (side_length + 1) // 2
+        G = nx.triangular_lattice_graph(side_length, side_length)
+        G = nx.convert_node_labels_to_integers(G)
     else:
         raise ValueError(f"Invalid topology: {topology}")
     
