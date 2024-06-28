@@ -30,6 +30,12 @@ cd sparse_coupled_learning
 pip install -r requirements.txt
 ```
 
+It is recommended that you set up a conda environment as well. Miniconda is preferred : [Installation Guide for Miniconda](https://docs.anaconda.com/miniconda/miniconda-install/)
+After setting it up, make an environment with Python 3.10:
+```bash
+conda create -n research python=3.10
+```
+
 ## Usage
 
 Import the necessary classes and create instances of `LinearNetwork` and `LinearNetworkSolver`:
