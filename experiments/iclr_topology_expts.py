@@ -88,7 +88,7 @@ def run_solver(G, tri, trt):
         in_node=tri,
         out_node=trt,
         lr=0.05,
-        steps=25000,
+        steps=250000,
         debug=True,
         every_nth=5000
     )
@@ -175,12 +175,24 @@ if __name__ == "__main__":
 
     # Plotting
     plt.figure(figsize=(12, 8))
+    # for topology in topologies:
+    #     mean_costs = stats.gmean(results[topology]['costs'], axis=1)
+    #     std_costs = np.std(np.log(results[topology]['costs']), axis=1)
+    #     mean_edges = np.mean(results[topology]['edges'], axis=1)
+    #     inv_edges = 1 / mean_edges
+    #     plt.errorbar(inv_edges, mean_costs, yerr=std_costs, capsize=5, label=topology)
     for topology in topologies:
         mean_costs = stats.gmean(results[topology]['costs'], axis=1)
-        std_costs = np.std(np.log(results[topology]['costs']), axis=1)
-        mean_edges = np.mean(results[topology]['edges'], axis=1)
+        log_mean_costs = np.log(mean_costs)
+        log_std_costs = np.std(np.log(results[topology]['costs']), axis=1)
+        mean_edges = stats.gmean(results[topology]['edges'], axis=1)  # Using geometric mean for consistency
         inv_edges = 1 / mean_edges
-        plt.errorbar(inv_edges, mean_costs, yerr=std_costs, capsize=5, label=topology)
+        
+        lower_bound = np.exp(log_mean_costs - log_std_costs)
+        upper_bound = np.exp(log_mean_costs + log_std_costs)
+        
+        plt.fill_between(inv_edges, lower_bound, upper_bound, alpha=0.3)
+        plt.plot(inv_edges, mean_costs, label=topology)
 
     plt.xscale('log')
     plt.yscale('log')
