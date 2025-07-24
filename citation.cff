@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+title: "Sparse Coupled Learning Solver"
+authors:
+  - family-names: Raheja
+    given-names: Tarun
+  - family-names: Stern
+    given-names: Menachem
+  - family-names: Liu
+    given-names: Andrea
+date-released: 2023-09-01
+abstract: >
+  This thesis explores the paradigm of embedding learning in physical networks, diverging from traditional digital computational approaches. By leveraging contrastive Hebbian learning and localized coupled learning mechanisms, we demonstrate that physical systems can evolve to exhibit learning capabilities. We develop efficient algorithms for linear networks and study their properties, exploring phenomena such as two-phase learning, the impact of network structure, and scaling behavior. Our findings highlight the importance of network design in creating efficient and effective learning systems. This work showcases the feasibility and benefits of in-material learning, opening up new avenues for innovations in adaptive materials, neuromorphic computing, and autonomous systems.
+repository-code: https://github.com/tehruhn/sparse_coupled_learning
+version: "1.0"
